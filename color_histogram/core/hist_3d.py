@@ -106,6 +106,60 @@ class Hist3D:
     def colorRanges(self):
         return self._color_ranges
 
+    def axisColorSpace(self, ax):
+
+        color_ranges = 0.1 * np.int32(10 * np.array(self._color_ranges)).T
+
+        xrange = color_ranges[0]
+        yrange = color_ranges[1]
+        zrange = color_ranges[2]
+
+        if self._color_space == "rgb":
+            ax.set_xlabel('R')
+            ax.set_ylabel('G')
+            ax.set_zlabel('B')
+        elif self._color_space == "Lab":
+#             xrange = [0.0, 100.0]
+#             yrange = [-50, 100.0]
+#             zrange = [-50.0, 100.0]
+
+            ax.set_xlabel('L')
+            ax.set_ylabel('a')
+            ax.set_zlabel('b')
+
+        elif self._color_space == "hsv":
+#             xrange = [0.0, 360.0]
+#             yrange = [0.0, 1.0]
+#             zrange = [0.0, 1.0]
+
+            ax.set_xlabel('H')
+            ax.set_ylabel('S')
+            ax.set_zlabel('V')
+
+        ax.set_xticks(xrange)
+        ax.set_yticks(yrange)
+        ax.set_zticks(zrange)
+
+        xunit = 0.1 * (xrange[1] - xrange[0])
+        yunit = 0.1 * (yrange[1] - yrange[0])
+        zunit = 0.1 * (zrange[1] - zrange[0])
+
+        xlim = np.array(xrange)
+        xlim[0] += -xunit
+        xlim[1] += xunit
+
+        ylim = np.array(yrange)
+        ylim[0] += -yunit
+        ylim[1] += yunit
+
+        zlim = np.array(zrange)
+        zlim[0] += -zunit
+        zlim[1] += zunit
+
+        ax.set_xlim3d(xlim)
+        ax.set_ylim3d(ylim)
+        ax.set_zlim3d(zlim)
+
     def plotColorSamples(self, ax):
         color_samples = self.colorSamples()
         density_size = self.plotDensitySize()
@@ -113,6 +167,13 @@ class Hist3D:
 
         ax.scatter(color_samples[:, 0], color_samples[:, 1], color_samples[:, 2],
                     color=colors, s=density_size)
+
+        self.axisColorSpace(ax)
+
+
+
+
+
 
 
     def plotDensitySize(self):
