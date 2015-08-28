@@ -6,15 +6,18 @@
 #  @date        2015/08/28
 
 import numpy as np
+
 from color_histogram.core.color_pixels import ColorPixels
 
 
-## Implementation of 3D color histograms.
+## Implementation of 2D color histograms.
 class Hist2D:
     ## Constructor
     #  @param image          input image.
     #  @param num_bins       target number of histogram bins.
     #  @param alpha          low density clip.
+    #  @param color_space    target color space.
+    #  @param channels       target color channels.
     def __init__(self, image, num_bins=16, alpha=0.1, color_space='rgb', channels=[0, 1]):
         self._computeTargetPixels(image, color_space, channels)
         self._num_bins = num_bins
