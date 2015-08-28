@@ -8,6 +8,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 from color_histogram.io_util.image import loadRGB
 from color_histogram.cv.image import rgb, to32F, rgb2Lab, rgb2hsv
@@ -21,18 +22,11 @@ from color_histogram.util.timer import timing_func
 ## Plot 3D color histograms for the target image, color space, channels.
 @timing_func
 def plotHistogram3D(C_32F, color_space, ax):
-    samples = np.array(C_32F)
-    if color_space == "Lab":
-        samples = rgb2Lab(samples)
-
-    if color_space == "hsv":
-        samples = rgb2hsv(samples)
-
     font_size = 15
     num_bins = 16
     plt.title("%s 3D histogram: %s bins" % (color_space, num_bins), fontsize=font_size)
 
-    hist3D = Hist3D(samples, num_bins=num_bins, color_space=color_space)
+    hist3D = Hist3D(C_32F, num_bins=num_bins, color_space=color_space)
     hist3D.plot(ax)
 
 
@@ -53,7 +47,7 @@ def histogram3DResult(image_file):
 
     h, w = C_8U.shape[:2]
     fig.add_subplot(231)
-    plt.title("Original Image: %s" % [w, h], fontsize=font_size)
+    plt.title("Original Image: %s x %s" % (w, h), fontsize=font_size)
     plt.imshow(C_8U)
     plt.axis('off')
 
@@ -78,7 +72,7 @@ def histogram3DResult(image_file):
 ## Compute histogram 3D results for the data names, ids.
 def histogram3DResults(data_names, data_ids):
     for data_name in data_names:
-        print "Performance tests: %s" % data_name
+        print "Histogram 3D: %s" % data_name
         for data_id in data_ids:
             print "Data ID: %s" % data_id
             image_file = dataFile(data_name, data_id)
