@@ -24,7 +24,7 @@ from color_histogram.util.timer import timing_func
 def plotHistogram3D(C_32F, color_space, ax):
     font_size = 15
     num_bins = 16
-    plt.title("%s 3D histogram: %s bins" % (color_space, num_bins), fontsize=font_size)
+    plt.title("%s: %s bins" % (color_space, num_bins), fontsize=font_size)
 
     hist3D = Hist3D(C_32F, num_bins=num_bins, color_space=color_space)
     hist3D.plot(ax)
