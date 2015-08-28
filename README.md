@@ -4,7 +4,20 @@ Color Histogram Demo (Python)
 
 Simple python demos of Color Histogram.
 
+This package includes:
+
+* Histogram 1D
+* Histogram 2D
+* Histogram 3D
+
 ## Result
+
+### Histogram 1D:
+
+Histogram 1D plotting in 1 channel from RGB, Lab, HSV color spaces.
+In the following demo, I show the L (Lab), h (HSV), v (HSV) plots.
+
+![Histogram 1D](color_histogram/results/flower_2_hist1D.png)
 
 ### Histogram 2D:
 

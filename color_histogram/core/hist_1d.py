@@ -1,9 +1,10 @@
+
 # -*- coding: utf-8 -*-
-## @package color_histogram.core.hist_2d
+## @package color_histogram.core.hist_1d
 #
-#  Implementation of 2D color histograms.
+#  Implementation of 1D color histograms.
 #  @author      tody
-#  @date        2015/08/28
+#  @date        2015/08/29
 
 import numpy as np
 
@@ -11,30 +12,33 @@ from color_histogram.core.color_pixels import ColorPixels
 
 
 ## Implementation of 2D color histograms.
-class Hist2D:
+class Hist1D:
     ## Constructor
     #  @param image          input image.
     #  @param num_bins       target number of histogram bins.
     #  @param alpha          low density clip.
     #  @param color_space    target color space.
     #  @param channels       target color channels.
-    def __init__(self, image, num_bins=16, alpha=0.1, color_space='rgb', channels=[0, 1]):
-        self._computeTargetPixels(image, color_space, channels)
+    def __init__(self, image, num_bins=16, alpha=0.1, color_space='Lab', channel=0):
+        self._computeTargetPixels(image, color_space, channel)
         self._num_bins = num_bins
         self._alpha = alpha
         self._color_space = color_space
-        self._channels = channels
+        self._channel = channel
 
         self._computeColorRange()
         self._computeHistogram()
 
-        self._plotter = Hist2DPlot(self)
+        self._plotter = Hist1DPlot(self)
+
+    def numBins(self):
+        return self._num_bins
 
     def colorSpace(self):
         return self._color_space
 
-    def channels(self):
-        return self._channels
+    def channel(self):
+        return self._channel
 
     def colorIDs(self):
         color_ids = np.where(self._histPositive())
@@ -69,37 +73,34 @@ class Hist2D:
     def plot(self, ax, density_size_range=[10, 100]):
         self._plotter.plot(ax, density_size_range)
 
-    def _computeTargetPixels(self, image, color_space, channels):
+    def _computeTargetPixels(self, image, color_space, channel):
         color_pixels = ColorPixels(image)
-        self._pixels = color_pixels.pixels(color_space)[:, channels]
+        self._pixels = color_pixels.pixels(color_space)[:, channel]
         self._rgb_pixels = color_pixels.rgb()
 
     def _computeColorRange(self):
         pixels = self._pixels
-        cs = pixels.shape[1]
-
-        c_min = np.zeros(cs)
-        c_max = np.zeros(cs)
-        for ci in xrange(cs):
-            c_min[ci] = np.min(pixels[:, ci])
-            c_max[ci] = np.max(pixels[:, ci])
+        c_min = np.min(pixels)
+        c_max = np.max(pixels)
 
         self._color_range = [c_min, c_max]
 
     def _computeHistogram(self):
         pixels = self._pixels
+
         num_bins = self._num_bins
         c_min, c_max = self._color_range
 
-        hist_bins = np.zeros((num_bins, num_bins), dtype=np.float32)
-        color_bins = np.zeros((num_bins, num_bins, 3), dtype=np.float32)
+        hist_bins = np.zeros((num_bins), dtype=np.float32)
+        color_bins = np.zeros((num_bins, 3), dtype=np.float32)
 
         color_ids = (num_bins - 1) * (pixels - c_min) / (c_max - c_min)
+
         color_ids = np.int32(color_ids)
 
         for pi, color_id in enumerate(color_ids):
-            hist_bins[color_id[0], color_id[1]] += 1
-            color_bins[color_id[0], color_id[1]] += self._rgb_pixels[pi]
+            hist_bins[color_id] += 1
+            color_bins[color_id] += self._rgb_pixels[pi]
 
         self._hist_bins = hist_bins
 
@@ -124,17 +125,21 @@ class Hist2D:
         return self._hist_bins > 0.0
 
 
-class Hist2DPlot:
+class Hist1DPlot:
 
-    def __init__(self, hist2D, density_size_range=[10, 100]):
-        self._hist2D = hist2D
+    def __init__(self, hist1D, density_size_range=[10, 100]):
+        self._hist1D = hist1D
 
     def plot(self, ax, density_size_range=[10, 100]):
-        color_samples = self._hist2D.colorCoordinates()
-        density_sizes = self._densitySizes(density_size_range)
-        colors = self._hist2D.rgbColors()
+        color_samples = self._hist1D.colorCoordinates()
+        color_densities = self._hist1D.colorDensities()
 
-        ax.scatter(color_samples[:, 0], color_samples[:, 1], color=colors, s=density_sizes)
+        colors = self._hist1D.rgbColors()
+
+        color_range = self._hist1D.colorRange()
+        width = (color_range[1] - color_range[0]) / float(self._hist1D.numBins())
+
+        ax.bar(color_samples, color_densities, width=width, color=colors)
         self._axisSetting(ax)
 
     def _range2ticks(self, tick_range):
@@ -148,8 +153,7 @@ class Hist2DPlot:
     def _range2lims(self, tick_range):
         unit = 0.1 * (tick_range[:, 1] - tick_range[:, 0])
         lim = np.array(tick_range)
-        lim[:, 0] += -unit
-        lim[:, 1] += unit
+        lim[1, 1] += unit[1]
 
         return lim[0], lim[1]
 
@@ -162,14 +166,14 @@ class Hist2DPlot:
         return density_sizes
 
     def _axisSetting(self, ax):
-        color_space = self._hist2D.colorSpace()
-        channels = self._hist2D.channels()
+        color_space = self._hist1D.colorSpace()
+        channel = self._hist1D.channel()
 
-        ax.set_xlabel(color_space[channels[0]])
-        ax.set_ylabel(color_space[channels[1]], rotation='horizontal')
+        ax.set_xlabel(color_space[channel])
+        ax.set_ylabel("Density")
 
-        color_range = self._hist2D.colorRange()
-        tick_range = np.array(color_range).T
+        color_range = self._hist1D.colorRange()
+        tick_range = np.array([color_range, [0.0, 1.0]])
         xticks, yticks = self._range2ticks(tick_range)
 
         ax.set_xticks(xticks)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ## @package color_histogram.results.hist_3d
 #
-#  color_histogram.results.hist_3d utility package.
+#  cCompute 3D color histogram result.
 #  @author      tody
 #  @date        2015/08/28
 
@@ -14,7 +14,7 @@ from color_histogram.io_util.image import loadRGB
 from color_histogram.cv.image import rgb, to32F, rgb2Lab, rgb2hsv
 from color_histogram.core.hist_3d import Hist3D
 from color_histogram.datasets.google_image import dataFile
-from color_histogram.results.results import resultFile
+from color_histogram.results.results import resultFile, batchResults
 from color_histogram.plot.window import showMaximize
 from color_histogram.util.timer import timing_func
 
@@ -71,12 +71,7 @@ def histogram3DResult(image_file):
 
 ## Compute histogram 3D results for the data names, ids.
 def histogram3DResults(data_names, data_ids):
-    for data_name in data_names:
-        print "Histogram 3D: %s" % data_name
-        for data_id in data_ids:
-            print "Data ID: %s" % data_id
-            image_file = dataFile(data_name, data_id)
-            histogram3DResult(image_file)
+    batchResults(data_names, data_ids, histogram3DResult, "Histogram 3D")
 
 if __name__ == '__main__':
     data_names = ["flower"]
