@@ -6,11 +6,18 @@ Simple python demos of Color Histogram.
 
 ## Result
 
+### Histogram 2D:
+
+Histogram 2D plotting in 2 channels from RGB, Lab, HSV color spaces.
+In the following demo, I show the (h, s), (h, v), (s, v) plots.
+
+![Histogram 2D](color_histogram/results/flower_1_hist2D.png)
+
 ### Histogram 3D:
 
 Histogram 3D plotting in RGB, Lab, HSV color spaces.
 
-![flower_1](color_histogram/results/flower_0_hist3D.png)
+![Histogram 3D](color_histogram/results/flower_0_hist3D.png)
 
 ## Installation
 
