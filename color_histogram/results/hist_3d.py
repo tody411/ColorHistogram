@@ -1,5 +1,3 @@
-from color_histogram.datasets.google_image import dataFile
-
 # -*- coding: utf-8 -*-
 ## @package color_histogram.results.hist_3d
 #
@@ -14,10 +12,14 @@ import matplotlib.pyplot as plt
 from color_histogram.io_util.image import loadRGB
 from color_histogram.cv.image import rgb, to32F, rgb2Lab, rgb2hsv
 from color_histogram.core.hist_3d import Hist3D
+from color_histogram.datasets.google_image import dataFile
 from color_histogram.results.results import resultFile
 from color_histogram.plot.window import showMaximize
+from color_histogram.util.timer import timing_func
 
 
+## Plot 3D color histograms for the target image, color space, channels.
+@timing_func
 def plotHistogram3D(C_32F, color_space, ax):
     samples = np.array(C_32F)
     if color_space == "Lab":
@@ -31,8 +33,10 @@ def plotHistogram3D(C_32F, color_space, ax):
     plt.title("%s 3D histogram: %s bins" % (color_space, num_bins), fontsize=font_size)
 
     hist3D = Hist3D(samples, num_bins=num_bins, color_space=color_space)
-    hist3D.plotColorSamples(ax)
+    hist3D.plot(ax)
 
+
+## Compute histogram 3D result for the image file.
 def histogram3DResult(image_file):
     image_name = os.path.basename(image_file)
     image_name = os.path.splitext(image_name)[0]
@@ -71,7 +75,7 @@ def histogram3DResult(image_file):
     #showMaximize()
 
 
-## Performance tests for the data names, IDs.
+## Compute histogram 3D results for the data names, ids.
 def histogram3DResults(data_names, data_ids):
     for data_name in data_names:
         print "Performance tests: %s" % data_name
