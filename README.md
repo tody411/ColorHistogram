@@ -21,6 +21,7 @@ Histogram 1D plotting in 1 channel from RGB, Lab, HSV color spaces.
 ``` python
 from color_histogram.io_util.image import loadRGB
 from color_histogram.core.hist_1d import Hist1D
+import matplotlib.pyplot as plt
 
 # Load image.
 image = loadRGB(image_file)
