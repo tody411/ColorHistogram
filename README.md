@@ -10,7 +10,7 @@ This package includes:
 * 2D color histogram: Hist2D class in [```color_histogram/core/hist_2d.py```](color_histogram/core/hist_2d.py).
 * 3D color histogram: Hist3D class in [```color_histogram/core/hist_3d.py```](color_histogram/core/hist_3d.py).
 
-## Result
+## Examples
 
 ### Histogram 1D:
 
@@ -35,7 +35,7 @@ plt.show()
 
 ```
 
-In the following demo, I show the L (Lab), h (HSV), v (HSV) plots.
+In the following demo, I show the L (Lab), h (HSV), v (HSV) plots by changing ```color_space``` and ```channel```.
 
 ![Histogram 1D](color_histogram/results/flower_2_hist1D.png)
 
@@ -62,7 +62,7 @@ hist2D.plot(ax)
 plt.show()
 ```
 
-In the following demo, I show the (h, s), (h, v), (s, v) plots.
+In the following demo, I show the (h, s), (h, v), (s, v) plots by changing ```channels```.
 
 ![Histogram 2D](color_histogram/results/flower_1_hist2D.png)
 
@@ -90,6 +90,8 @@ hist3D.plot(ax)
 plt.show()
 
 ```
+
+In the following demo, I show the RGB, Lab, HSV plots by changing ```color_space```.
 
 ![Histogram 3D](color_histogram/results/flower_0_hist3D.png)
 
@@ -123,24 +125,20 @@ Please run the following command from the shell.
 ```
 
 ## Usage
-### Package Structure
-* color_histogram: Main package.
-    - main.py: Main module for testing.
-    - results: Result images will be saved in the directory.
+### Run Color Histogram Demo
 
-### Test Color Histogram Demo
-You can test the color histogram demo with the following command from ```color_histogram``` directory..
+* [```color_histogram/main.py```](color_histogram/main.py):
+
+You can test the color histogram demo with the following command from ```color_histogram``` directory.
 ``` bash
   > python main.py
 ```
 
-This command will start downloading test images via Google Image API then run the ```color_histogram``` module to generate result images.
+This command will start downloading test images via Google Image API then run the demo module to generate result images in [```color_histogram/results```](color_histogram/results) directory.
 
-In the ```color_histogram/results``` folder, you can also find examples:
-
-* ```hist_1d.py```
-* ```hist_2d.py```
-* ```hist_3d.py```
+### Examples Codes
+* [```color_histogram/examples```](color_histogram/examples): You can find minimal example codes.
+* [```color_histogram/results```](color_histogram/results): You can also find examples codes to generate result images.
 
 <!-- ## API Document
 

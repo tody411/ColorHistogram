@@ -23,7 +23,7 @@ from color_histogram.core.hist_1d import Hist1D
 @timing_func
 def plotHistogram1D(image, color_space, channel, ax):
     font_size = 15
-    num_bins = 32
+    num_bins = 16
 
     plt.title("%s (%s): %s bins" % (color_space,
                                         color_space[channel],
