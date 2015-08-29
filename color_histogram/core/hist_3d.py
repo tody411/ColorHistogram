@@ -9,6 +9,8 @@
 import numpy as np
 
 from color_histogram.core.color_pixels import ColorPixels
+from color_histogram.core.hist_common import colorCoordinates, colorDensities, rgbColors, clipLowDensity, range2ticks,\
+    densitySizes, range2lims
 
 
 ## Implementation of 3D color histograms.
@@ -17,9 +19,9 @@ class Hist3D:
     #  @param image          input image.
     #  @param num_bins       target number of histogram bins.
     #  @param alpha          low density clip.
-    #  @param color_space    target color space.
+    #  @param color_space    target color space. 'rgb' or 'Lab' or 'hsv'.
     def __init__(self, image,
-                 num_bins=16, alpha=0.1, color_space="rgb"):
+                 num_bins=16, alpha=0.1, color_space='rgb'):
         self._computeTargetPixels(image, color_space)
 
         self._num_bins = num_bins
@@ -31,6 +33,10 @@ class Hist3D:
 
         self._plotter = Hist3DPlot(self)
 
+    ## Plot histogram with the given density size range.
+    def plot(self, ax, density_size_range=[10, 100]):
+        self._plotter.plot(ax, density_size_range)
+
     def colorSpace(self):
         return self._color_space
 
@@ -40,32 +46,18 @@ class Hist3D:
 
     def colorCoordinates(self):
         color_ids = self.colorIDs()
-        color_ids = np.array(color_ids).T
-
         num_bins = self._num_bins
-        c_min, c_max = self._color_range
-        color_samples = c_min + (color_ids * (c_max - c_min)) / float(num_bins - 1.0)
-
-        return color_samples
+        color_range = self._color_range
+        return colorCoordinates(color_ids, num_bins, color_range)
 
     def colorDensities(self):
-        color_densities = np.float32(self._hist_bins[self._histPositive()])
-
-        density_max = np.max(color_densities)
-        color_densities = color_densities / density_max
-
-        return color_densities
+        return colorDensities(self._hist_bins)
 
     def rgbColors(self):
-        colors = self._color_bins[self._histPositive(), :]
-        colors = np.clip(colors, 0.0, 1.0)
-        return colors
+        return rgbColors(self._hist_bins, self._color_bins)
 
     def colorRange(self):
         return self._color_range
-
-    def plot(self, ax, density_size_range=[10, 100]):
-        self._plotter.plot(ax, density_size_range)
 
     def _computeTargetPixels(self, image, color_space):
         color_pixels = ColorPixels(image)
@@ -110,22 +102,20 @@ class Hist3D:
         self._clipLowDensity()
 
     def _clipLowDensity(self):
-        density_mean = np.mean(self._hist_bins)
-        low_density = self._hist_bins < density_mean * self._alpha
-        self._hist_bins[low_density] = 0.0
-
-        for ci in xrange(3):
-            self._color_bins[low_density, ci] = 0.0
+        clipLowDensity(self._hist_bins, self._color_bins, self._alpha)
 
     def _histPositive(self):
         return self._hist_bins > 0.0
 
 
+## 3D color histogram plotter.
 class Hist3DPlot:
-
-    def __init__(self, hist3D, density_size_range=[10, 100]):
+    ## Constructor.
+    #  @param hist3D histogram for plotting.
+    def __init__(self, hist3D):
         self._hist3D = hist3D
 
+    ## Plot histogram with the given density size range.
     def plot(self, ax, density_size_range=[10, 100]):
         color_samples = self._hist3D.colorCoordinates()
         density_sizes = self._densitySizes(density_size_range)
@@ -134,26 +124,9 @@ class Hist3DPlot:
         ax.scatter(color_samples[:, 0], color_samples[:, 1], color_samples[:, 2], color=colors, s=density_sizes)
         self._axisSetting(ax)
 
-    def _range2ticks(self, tick_range):
-        ticks = np.around(tick_range, decimals=1)
-        ticks[ticks > 10] = np.rint(ticks[ticks > 10])
-        return ticks[0], ticks[1], ticks[2]
-
-    def _range2lims(self, tick_range):
-        unit = 0.1 * (tick_range[:, 1] - tick_range[:, 0])
-        lim = np.array(tick_range)
-        lim[:, 0] += -unit
-        lim[:, 1] += unit
-
-        return lim[0], lim[1], lim[2]
-
     def _densitySizes(self, density_size_range):
         color_densities = self._hist3D.colorDensities()
-
-        density_size_min, density_size_max = density_size_range
-        density_size_factor = density_size_max / density_size_min
-        density_sizes = density_size_min * np.power(density_size_factor, color_densities)
-        return density_sizes
+        return densitySizes(color_densities, density_size_range)
 
     def _axisSetting(self, ax):
         color_space = self._hist3D.colorSpace()
@@ -165,13 +138,13 @@ class Hist3DPlot:
         color_range = self._hist3D.colorRange()
         tick_range = np.array(color_range).T
 
-        xticks, yticks, zticks = self._range2ticks(tick_range)
+        xticks, yticks, zticks = range2ticks(tick_range)
 
         ax.set_xticks(xticks)
         ax.set_yticks(yticks)
         ax.set_zticks(zticks)
 
-        xlim, ylim, zlim = self._range2lims(tick_range)
+        xlim, ylim, zlim = range2lims(tick_range)
 
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
