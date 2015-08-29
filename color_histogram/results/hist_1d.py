@@ -21,7 +21,7 @@ from color_histogram.core.hist_1d import Hist1D
 
 ## Plot 1D color histograms for the target image, color space, channels.
 @timing_func
-def plotHistogram1D(C_32F, color_space, channel, ax):
+def plotHistogram1D(image, color_space, channel, ax):
     font_size = 15
     num_bins = 32
 
@@ -29,7 +29,7 @@ def plotHistogram1D(C_32F, color_space, channel, ax):
                                         color_space[channel],
                                         num_bins), fontsize=font_size)
 
-    hist1D = Hist1D(C_32F, num_bins=num_bins, color_space=color_space, channel=channel)
+    hist1D = Hist1D(image, num_bins=num_bins, color_space=color_space, channel=channel)
     hist1D.plot(ax)
 
 
@@ -46,16 +46,13 @@ def histogram1DResult(image_file):
     font_size = 15
     fig.suptitle("Hisotogram 1D", fontsize=font_size)
 
-    C_8U = loadRGB(image_file)
+    image = loadRGB(image_file)
 
-    h, w = C_8U.shape[:2]
+    h, w = image.shape[:2]
     fig.add_subplot(231)
     plt.title("Original Image: %s x %s" % (w, h), fontsize=font_size)
-    plt.imshow(C_8U)
+    plt.imshow(image)
     plt.axis('off')
-
-    rgb_8U = rgb(C_8U)
-    C_32F = to32F(rgb_8U)
 
     color_targets = [["Lab", 0], ["hsv", 0], ["hsv", 2]]
 
@@ -63,7 +60,7 @@ def histogram1DResult(image_file):
     for color_target in color_targets:
         ax = fig.add_subplot(plot_id)
         color_space, channel = color_target
-        plotHistogram1D(C_32F, color_space, channel, ax)
+        plotHistogram1D(image, color_space, channel, ax)
         plot_id += 1
 
     result_name = image_name + "_hist1D"

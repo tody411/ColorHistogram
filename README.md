@@ -6,15 +6,35 @@ Simple python demos of Color Histogram.
 
 This package includes:
 
-* Histogram 1D
-* Histogram 2D
-* Histogram 3D
+* 1D color histogram: Hist1D class in [```color_histogram/core/hist_1d.py```](color_histogram/core/hist_1d.py).
+* 2D color histogram: Hist2D class in [```color_histogram/core/hist_2d.py```](color_histogram/core/hist_2d.py).
+* 3D color histogram: Hist3D class in [```color_histogram/core/hist_3d.py```](color_histogram/core/hist_3d.py).
 
 ## Result
 
 ### Histogram 1D:
 
 Histogram 1D plotting in 1 channel from RGB, Lab, HSV color spaces.
+
+#### Minimal example:
+
+``` python
+from color_histogram.io_util.image import loadRGB
+from color_histogram.core.hist_1d import Hist1D
+
+# Load image.
+image = loadRGB(image_file)
+
+# 16 bins, Lab color space, target channel L ('Lab'[0])
+hist1D = Hist1D(image, num_bins=16, color_space='Lab', channel=0)
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+hist1D.plot(ax)
+plt.show()
+
+```
+
 In the following demo, I show the L (Lab), h (HSV), v (HSV) plots.
 
 ![Histogram 1D](color_histogram/results/flower_2_hist1D.png)
@@ -22,6 +42,26 @@ In the following demo, I show the L (Lab), h (HSV), v (HSV) plots.
 ### Histogram 2D:
 
 Histogram 2D plotting in 2 channels from RGB, Lab, HSV color spaces.
+
+#### Minimal example:
+
+``` python
+from color_histogram.io_util.image import loadRGB
+from color_histogram.core.hist_2d import Hist2D
+import matplotlib.pyplot as plt
+
+# Load image.
+image = loadRGB(image_file)
+
+# 32 bins, hsv color space, target channels (h, s) ('hsv'[0], 'hsv'[1])
+hist2D = Hist2D(image, num_bins=32, color_space='hsv', channels=[0, 1])
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+hist2D.plot(ax)
+plt.show()
+```
+
 In the following demo, I show the (h, s), (h, v), (s, v) plots.
 
 ![Histogram 2D](color_histogram/results/flower_1_hist2D.png)
@@ -29,6 +69,27 @@ In the following demo, I show the (h, s), (h, v), (s, v) plots.
 ### Histogram 3D:
 
 Histogram 3D plotting in RGB, Lab, HSV color spaces.
+
+#### Minimal example:
+
+``` python
+from color_histogram.io_util.image import loadRGB
+from color_histogram.core.hist_3d import Hist3D
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Load image.
+image = loadRGB(image_file)
+
+# 16 bins, rgb color space
+hist3D = Hist3D(image, num_bins=16, color_space='rgb')
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+hist3D.plot(ax)
+plt.show()
+
+```
 
 ![Histogram 3D](color_histogram/results/flower_0_hist3D.png)
 
@@ -68,12 +129,18 @@ Please run the following command from the shell.
     - results: Result images will be saved in the directory.
 
 ### Test Color Histogram Demo
-You can test the Color Histogram with the following command from ```color_histogram``` directory..
+You can test the color histogram demo with the following command from ```color_histogram``` directory..
 ``` bash
   > python main.py
 ```
 
 This command will start downloading test images via Google Image API then run the ```color_histogram``` module to generate result images.
+
+In the ```color_histogram/results``` folder, you can also find examples:
+
+* ```hist_1d.py```
+* ```hist_2d.py```
+* ```hist_3d.py```
 
 <!-- ## API Document
 

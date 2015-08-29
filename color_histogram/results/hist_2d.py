@@ -22,7 +22,7 @@ from color_histogram.util.timer import timing_func
 
 ## Plot 2D color histograms for the target image, color space, channels.
 @timing_func
-def plotHistogram2D(C_32F, color_space, channels, ax):
+def plotHistogram2D(image, color_space, channels, ax):
     font_size = 15
     num_bins = 32
 
@@ -31,7 +31,7 @@ def plotHistogram2D(C_32F, color_space, channels, ax):
                                         color_space[channels[1]],
                                         num_bins), fontsize=font_size)
 
-    hist2D = Hist2D(C_32F, num_bins=num_bins, color_space=color_space, channels=channels)
+    hist2D = Hist2D(image, num_bins=num_bins, color_space=color_space, channels=channels)
     hist2D.plot(ax)
 
 
@@ -48,16 +48,13 @@ def histogram2DResult(image_file):
     font_size = 15
     fig.suptitle("Hisotogram 2D", fontsize=font_size)
 
-    C_8U = loadRGB(image_file)
+    image = loadRGB(image_file)
 
-    h, w = C_8U.shape[:2]
+    h, w = image.shape[:2]
     fig.add_subplot(231)
     plt.title("Original Image: %s x %s" % (w, h), fontsize=font_size)
-    plt.imshow(C_8U)
+    plt.imshow(image)
     plt.axis('off')
-
-    rgb_8U = rgb(C_8U)
-    C_32F = to32F(rgb_8U)
 
     color_space = "hsv"
     channels_list = [[0, 1], [0, 2], [1,2]]
@@ -65,7 +62,7 @@ def histogram2DResult(image_file):
     plot_id = 234
     for channels in channels_list:
         ax = fig.add_subplot(plot_id)
-        plotHistogram2D(C_32F, color_space, channels, ax)
+        plotHistogram2D(image, color_space, channels, ax)
         plot_id += 1
 
     result_name = image_name + "_hist2D"

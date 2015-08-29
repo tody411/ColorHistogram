@@ -21,12 +21,12 @@ from color_histogram.util.timer import timing_func
 
 ## Plot 3D color histograms for the target image, color space, channels.
 @timing_func
-def plotHistogram3D(C_32F, color_space, ax):
+def plotHistogram3D(image, color_space, ax):
     font_size = 15
     num_bins = 16
     plt.title("%s: %s bins" % (color_space, num_bins), fontsize=font_size)
 
-    hist3D = Hist3D(C_32F, num_bins=num_bins, color_space=color_space)
+    hist3D = Hist3D(image, num_bins=num_bins, color_space=color_space)
     hist3D.plot(ax)
 
 
@@ -43,23 +43,20 @@ def histogram3DResult(image_file):
     font_size = 15
     fig.suptitle("Hisotogram 3D", fontsize=font_size)
 
-    C_8U = loadRGB(image_file)
+    image = loadRGB(image_file)
 
-    h, w = C_8U.shape[:2]
+    h, w = image.shape[:2]
     fig.add_subplot(231)
     plt.title("Original Image: %s x %s" % (w, h), fontsize=font_size)
-    plt.imshow(C_8U)
+    plt.imshow(image)
     plt.axis('off')
-
-    rgb_8U = rgb(C_8U)
-    C_32F = to32F(rgb_8U)
 
     color_spaces = ["rgb", "Lab", "hsv"]
 
     plot_id = 234
     for color_space in color_spaces:
         ax = fig.add_subplot(plot_id, projection='3d')
-        plotHistogram3D(C_32F, color_space, ax)
+        plotHistogram3D(image, color_space, ax)
         plot_id += 1
 
     result_name = image_name + "_hist3D"

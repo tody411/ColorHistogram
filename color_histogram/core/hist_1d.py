@@ -143,9 +143,6 @@ class Hist1DPlot:
         self._axisSetting(ax)
 
     def _range2ticks(self, tick_range):
-        xticks = np.linspace(tick_range[0, 0], tick_range[0, 1], 4)
-        yticks = np.linspace(tick_range[1, 0], tick_range[1, 1], 4)
-        ticks = np.array([xticks, yticks])
         ticks = np.around(tick_range, decimals=1)
         ticks[ticks > 10] = np.rint(ticks[ticks > 10])
         return ticks[0], ticks[1]
