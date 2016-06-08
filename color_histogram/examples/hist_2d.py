@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package color_histogram.examples.hist_2d
+# # @package color_histogram.examples.hist_2d
 #
 #  Minimal example of 2D color histograms.
 #  @author      tody
@@ -9,7 +9,7 @@ from color_histogram.io_util.image import loadRGB
 from color_histogram.core.hist_2d import Hist2D
 import matplotlib.pyplot as plt
 
-from color_histogram.datasets.google_image import dataFile
+from color_histogram.datasets.datasets import dataFile
 
 image_file = dataFile("flower", 0)
 

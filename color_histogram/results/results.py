@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
-## @package color_histogram.results.results
+# # @package color_histogram.results.results
 #
 #  Results utility package.
 #  @author      tody
 #  @date        2015/08/20
 
 import os
-from color_histogram.datasets.google_image import dataFile
+from color_histogram.datasets.datasets import dataFile
 
 _root_dir = os.path.dirname(__file__)
 
 
-## Result directory.
+# # Result directory.
 def resultDir():
     return _root_dir
 
 
-## Result file.
+# # Result file.
 def resultFile(image_name, image_ext=".png"):
     result_file = os.path.join(resultDir(), image_name + image_ext)
     return result_file

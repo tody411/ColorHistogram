@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package color_histogram.datasets.google_image
+# # @package color_histogram.datasets.google_image
 #
 #  Image datasets via Google Image API.
 #  createDatasets function will create datasets
@@ -24,52 +24,12 @@ import cv2
 import matplotlib.pyplot as plt
 
 from color_histogram.io_util.image import loadRGB, saveRGB
-
-_root_dir = os.path.dirname(__file__)
-
-
-## Data directory for the given data_name.
-def dataDir(data_name):
-    data_dir = os.path.join(_root_dir, data_name)
-    return data_dir
+from color_histogram.datasets.datasets import dataDir, dataFiles
 
 
-## Data file path list for the given data_name.
-def dataFiles(data_name):
-    data_dir = dataDir(data_name)
-    data_files = []
-    for data_name in os.listdir(data_dir):
-        data_file = os.path.join(data_dir, data_name)
-        if ".png" in data_name or ".jpg" in data_name:
-            data_files.append(data_file)
-        else:
-            os.remove(data_file)
-    return data_files
-
-
-## Data file path for the given data_name and data_id.
-def dataFile(data_name, data_id):
-    data_files = dataFiles(data_name)
-
-    if data_id >= len(data_files):
-        return None
-
-    data_file = data_files[data_id]
-    return data_file
-
-
-def loadData(data_name, data_id):
-    data_file = dataFile(data_name, data_id)
-
-    if data_file is None:
-        return None
-
-    return loadRGB(data_file)
-
-
-## Simple image loaders via Google image API.
+# # Simple image loaders via Google image API.
 class GoogleImageLoader:
-    ## Constructor
+    # # Constructor
     #  @param keyword     keyword for image search.
     #  @param num_images  target number of images for the search.
     #  @param update      Update existing images if the value is True.
@@ -159,12 +119,12 @@ class GoogleImageLoader:
             print "  - Resized: %s" % data_filename
 
 
-## Create dataset for the given data_name.
+# # Create dataset for the given data_name.
 def createDataset(data_name="banana", num_images=10, update=False):
     GoogleImageLoader(data_name, num_images, update)
 
 
-## Create datasets for the given data_names.
+# # Create datasets for the given data_names.
 def createDatasets(data_names=["apple", "banana", "sky", "tulip", "flower"],
                    num_images=10,
                    update=False):

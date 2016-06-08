@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package color_histogram.results.hist_3d
+# # @package color_histogram.results.hist_3d
 #
 #  cCompute 3D color histogram result.
 #  @author      tody
@@ -13,25 +13,30 @@ from mpl_toolkits.mplot3d import Axes3D
 from color_histogram.io_util.image import loadRGB
 from color_histogram.cv.image import rgb, to32F, rgb2Lab, rgb2hsv
 from color_histogram.core.hist_3d import Hist3D
-from color_histogram.datasets.google_image import dataFile
+from color_histogram.datasets.datasets import dataFile
 from color_histogram.results.results import resultFile, batchResults
 from color_histogram.plot.window import showMaximize
 from color_histogram.util.timer import timing_func
 
 
-## Plot 3D color histograms for the target image, color space, channels.
+# # Plot 3D color histograms for the target image, color space, channels.
 @timing_func
-def plotHistogram3D(image, color_space, ax):
+def plotHistogram3D(image, num_bins, color_space, ax):
     font_size = 15
-    num_bins = 32
     plt.title("%s: %s bins" % (color_space, num_bins), fontsize=font_size)
 
     hist3D = Hist3D(image, num_bins=num_bins, color_space=color_space)
     hist3D.plot(ax)
 
 
-## Compute histogram 3D result for the image file.
-def histogram3DResult(image_file):
+# # Create histogram 3D result function.
+def histogram3DResultFunc(num_bins=32):
+    def func(image_file):
+        histogram3DResult(image_file, num_bins)
+    return func
+
+# # Compute histogram 3D result for the image file.
+def histogram3DResult(image_file, num_bins=32):
     image_name = os.path.basename(image_file)
     image_name = os.path.splitext(image_name)[0]
 
@@ -56,19 +61,19 @@ def histogram3DResult(image_file):
     plot_id = 234
     for color_space in color_spaces:
         ax = fig.add_subplot(plot_id, projection='3d')
-        plotHistogram3D(image, color_space, ax)
+        plotHistogram3D(image, num_bins, color_space, ax)
         plot_id += 1
 
     result_name = image_name + "_hist3D"
     result_file = resultFile(result_name)
     plt.savefig(result_file, transparent=True)
 
-    #showMaximize()
+    # showMaximize()
 
 
-## Compute histogram 3D results for the data names, ids.
-def histogram3DResults(data_names, data_ids):
-    batchResults(data_names, data_ids, histogram3DResult, "Histogram 3D")
+# # Compute histogram 3D results for the data names, ids.
+def histogram3DResults(data_names, data_ids, num_bins=32):
+    batchResults(data_names, data_ids, histogram3DResultFunc(num_bins), "Histogram 3D")
 
 if __name__ == '__main__':
     data_names = ["flower"]

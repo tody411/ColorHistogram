@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-## @package color_histogram.examples.hist_3d
+# # @package color_histogram.examples.hist_3d
 #
 #  Minimal example of 3D color histograms.
 #  @author      tody
@@ -10,7 +10,7 @@ from color_histogram.core.hist_3d import Hist3D
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from color_histogram.datasets.google_image import dataFile
+from color_histogram.datasets.datasets import dataFile
 
 image_file = dataFile("flower", 0)
 
