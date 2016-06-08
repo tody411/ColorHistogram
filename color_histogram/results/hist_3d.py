@@ -35,10 +35,17 @@ def histogram3DResultFunc(num_bins=32):
         histogram3DResult(image_file, num_bins)
     return func
 
+
 # # Compute histogram 3D result for the image file.
-def histogram3DResult(image_file, num_bins=32):
+def histogram3DResult(image_file, num_bins=32, image=None, tile=None):
     image_name = os.path.basename(image_file)
-    image_name = os.path.splitext(image_name)[0]
+    if image is None:
+        image_name = os.path.basename(image_file)
+        image_name = os.path.splitext(image_name)[0]
+        image = loadRGB(image_file)
+
+    if tile is None:
+        tile = image
 
     fig_w = 10
     fig_h = 6
@@ -48,12 +55,10 @@ def histogram3DResult(image_file, num_bins=32):
     font_size = 15
     fig.suptitle("Hisotogram 3D", fontsize=font_size)
 
-    image = loadRGB(image_file)
-
     h, w = image.shape[:2]
     fig.add_subplot(231)
     plt.title("Original Image: %s x %s" % (w, h), fontsize=font_size)
-    plt.imshow(image)
+    plt.imshow(tile)
     plt.axis('off')
 
     color_spaces = ["rgb", "Lab", "hsv"]
@@ -67,8 +72,6 @@ def histogram3DResult(image_file, num_bins=32):
     result_name = image_name + "_hist3D"
     result_file = resultFile(result_name)
     plt.savefig(result_file, transparent=True)
-
-    # showMaximize()
 
 
 # # Compute histogram 3D results for the data names, ids.
