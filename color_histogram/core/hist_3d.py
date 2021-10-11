@@ -5,6 +5,7 @@
 #  Implementation of 3D color histograms.
 #  @author      tody
 #  @date        2015/08/28
+from __future__ import division
 
 import numpy as np
 

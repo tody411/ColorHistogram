@@ -4,6 +4,7 @@
 #  Implementation of 2D color histograms.
 #  @author      tody
 #  @date        2015/08/28
+from __future__ import division
 
 import numpy as np
 

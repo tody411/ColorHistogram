@@ -5,6 +5,7 @@
 #  Implementation of 1D color histograms.
 #  @author      tody
 #  @date        2015/08/29
+from __future__ import division
 
 import numpy as np
 
