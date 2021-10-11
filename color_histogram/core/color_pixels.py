@@ -60,11 +60,11 @@ class ColorPixels:
     def _image2pixels(self, image):
         if _isGray(image):
             h, w = image.shape
-            step = h * w / self._num_pixels
+            step = h * w // self._num_pixels
             return image.reshape((h * w))[::step]
 
         h, w, cs = image.shape
-        step = h * w / self._num_pixels
+        step = h * w // self._num_pixels
         return image.reshape((-1, cs))[::step]
 
 
