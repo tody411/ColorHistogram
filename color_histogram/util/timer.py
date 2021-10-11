@@ -6,6 +6,7 @@
 #  @author      tody
 #  @date        2015/07/29
 
+from __future__ import print_function
 import time
 
 

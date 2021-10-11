@@ -14,7 +14,7 @@
 #  @author      tody
 #  @date        2015/08/15
 
-
+from __future__ import print_function
 import json
 import os
 import urllib.request

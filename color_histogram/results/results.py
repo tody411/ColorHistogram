@@ -5,6 +5,7 @@
 #  @author      tody
 #  @date        2015/08/20
 
+from __future__ import print_function
 import os
 from color_histogram.datasets.datasets import dataFile
 
