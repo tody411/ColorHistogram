@@ -45,7 +45,7 @@ class Timer(object):
             self._logger.debug(self._secondsStr())
 
         if self._output:
-            print self._secondsStr()
+            print(self._secondsStr())
 
     def __str__(self):
         return self._secondsStr()
