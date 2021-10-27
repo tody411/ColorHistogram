@@ -4,6 +4,7 @@
 #  Implementation of 2D color histograms.
 #  @author      tody
 #  @date        2015/08/28
+from __future__ import division
 
 import numpy as np
 
@@ -72,7 +73,7 @@ class Hist2D:
 
         c_min = np.zeros(cs)
         c_max = np.zeros(cs)
-        for ci in xrange(cs):
+        for ci in range(cs):
             c_min[ci] = np.min(pixels[:, ci])
             c_max[ci] = np.max(pixels[:, ci])
 
@@ -86,7 +87,7 @@ class Hist2D:
         hist_bins = np.zeros((num_bins, num_bins), dtype=np.float32)
         color_bins = np.zeros((num_bins, num_bins, 3), dtype=np.float32)
 
-        color_ids = (num_bins - 1) * (pixels - c_min) / (c_max - c_min)
+        color_ids = (num_bins - 1) * (pixels - c_min) // (c_max - c_min)
         color_ids = np.int32(color_ids)
 
         for pi, color_id in enumerate(color_ids):
@@ -97,7 +98,7 @@ class Hist2D:
 
         hist_positive = self._hist_bins > 0.0
 
-        for ci in xrange(3):
+        for ci in range(3):
             color_bins[hist_positive, ci] /= self._hist_bins[hist_positive]
 
         self._color_bins = color_bins

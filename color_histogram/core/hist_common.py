@@ -38,7 +38,7 @@ def clipLowDensity(hist_bins, color_bins, alpha):
     low_density = hist_bins < density_mean * alpha
     hist_bins[low_density] = 0.0
 
-    for ci in xrange(3):
+    for ci in range(3):
         color_bins[low_density, ci] = 0.0
 
 

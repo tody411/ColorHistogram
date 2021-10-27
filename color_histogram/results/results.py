@@ -5,6 +5,7 @@
 #  @author      tody
 #  @date        2015/08/20
 
+from __future__ import print_function
 import os
 from color_histogram.datasets.datasets import dataFile
 
@@ -24,9 +25,9 @@ def resultFile(image_name, image_ext=".png"):
 
 def batchResults(data_names, data_ids, batch_func, batch_name):
     for data_name in data_names:
-        print "%s: %s" % (batch_name, data_name)
+        print("%s: %s" % (batch_name, data_name))
         for data_id in data_ids:
-            print "Data ID: %s" % data_id
+            print("Data ID: %s" % data_id)
             image_file = dataFile(data_name, data_id)
             batch_func(image_file)
 
@@ -37,10 +38,10 @@ def batchResults(data_names, data_ids, batch_func, batch_name):
 #  @param batch_name batch command name.
 def batchDataGroup(data_names, data_ids, batch_func, batch_name):
     for data_name in data_names:
-        print "%s: %s" % (batch_name, data_name)
+        print("%s: %s" % (batch_name, data_name))
 
         batch_func(data_name, data_ids)
 
 if __name__ == '__main__':
-    print resultDir()
-    print resultFile("testImage")
+    print(resultDir())
+    print(resultFile("testImage"))

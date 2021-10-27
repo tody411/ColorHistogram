@@ -5,6 +5,7 @@
 #  Implementation of 1D color histograms.
 #  @author      tody
 #  @date        2015/08/29
+from __future__ import division
 
 import numpy as np
 
@@ -85,7 +86,7 @@ class Hist1D:
         hist_bins = np.zeros((num_bins), dtype=np.float32)
         color_bins = np.zeros((num_bins, 3), dtype=np.float32)
 
-        color_ids = (num_bins - 1) * (pixels - c_min) / (c_max - c_min)
+        color_ids = (num_bins - 1) * (pixels - c_min) // (c_max - c_min)
 
         color_ids = np.int32(color_ids)
 
@@ -97,7 +98,7 @@ class Hist1D:
 
         hist_positive = self._hist_bins > 0.0
 
-        for ci in xrange(3):
+        for ci in range(3):
             color_bins[hist_positive, ci] /= self._hist_bins[hist_positive]
 
         self._color_bins = color_bins

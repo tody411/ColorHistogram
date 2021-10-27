@@ -6,6 +6,7 @@
 #  @author      tody
 #  @date        2015/07/29
 
+from __future__ import print_function
 import time
 
 
@@ -45,7 +46,7 @@ class Timer(object):
             self._logger.debug(self._secondsStr())
 
         if self._output:
-            print self._secondsStr()
+            print(self._secondsStr())
 
     def __str__(self):
         return self._secondsStr()
